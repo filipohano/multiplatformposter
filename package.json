@@ -1,0 +1,44 @@
+{
+  "name": "multiplatformposter",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "prisma migrate deploy && next start",
+    "lint": "eslint .",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts",
+    "cron:local": "tsx scripts/run-cron-locally.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "date-fns": "^4.1.0",
+    "next": "15.5.22",
+    "next-auth": "^4.24.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "twitter-api-v2": "^1.29.0",
+    "uuid": "^11.0.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
