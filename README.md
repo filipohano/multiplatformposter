@@ -49,6 +49,9 @@ Uten API-nøkler kan du fortsatt logge inn, lage innlegg og se dem i UI-et — s
 publiseringen mot plattformen vil feile med en tydelig feilmelding til den er koblet til
 ekte nøkler. Callback-URL-ene under forutsetter `NEXTAUTH_URL=http://localhost:3000` lokalt.
 
+For en detaljert, klikk-for-klikk-guide til hver plattform (hvor du finner nøklene, hvilke
+scopes du trenger, og når App Review faktisk kreves), se **[docs/SETUP.md](docs/SETUP.md)**.
+
 ### X (Twitter)
 1. Opprett en app på [developer.twitter.com](https://developer.twitter.com) med **OAuth 2.0** aktivert (User authentication settings).
 2. Legg til callback-URL: `{NEXTAUTH_URL}/api/accounts/twitter/callback`
