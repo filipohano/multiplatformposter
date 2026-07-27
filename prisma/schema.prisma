@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Platform {
+  TWITTER
+  INSTAGRAM
+  TIKTOK
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHING
+  PUBLISHED
+  FAILED
+  PARTIAL
+}
+
+enum TargetStatus {
+  PENDING
+  PUBLISHING
+  PUBLISHED
+  FAILED
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String         @unique
+  passwordHash  String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  socialAccounts SocialAccount[]
+  posts         Post[]
+}
+
+model SocialAccount {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform      Platform
+  externalId    String
+  displayName   String
+  avatarUrl     String?
+  accessToken   String
+  refreshToken  String?
+  tokenExpiresAt DateTime?
+  // Instagram publishing requires the linked Facebook Page + IG Business Account id.
+  metadata      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  targets       PostTarget[]
+
+  @@unique([userId, platform, externalId])
+}
+
+model Post {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  caption      String
+  mediaUrls    String       // JSON-encoded string array of media URLs
+  status       PostStatus   @default(DRAFT)
+  scheduledAt  DateTime?
+  publishedAt  DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  targets      PostTarget[]
+
+  @@index([status, scheduledAt])
+}
+
+model PostTarget {
+  id              String        @id @default(cuid())
+  postId          String
+  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  socialAccountId String
+  socialAccount   SocialAccount @relation(fields: [socialAccountId], references: [id], onDelete: Cascade)
+  platform        Platform
+  status          TargetStatus  @default(PENDING)
+  externalPostId  String?
+  errorMessage    String?
+  publishedAt     DateTime?
+
+  @@unique([postId, socialAccountId])
+}
