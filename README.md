@@ -16,7 +16,7 @@ og **TikTok** samtidig, fra samme sted.
 ## Teknologi
 
 - **Next.js 15** (App Router) + TypeScript + Tailwind CSS
-- **Prisma** + SQLite for lokal utvikling (bytt `provider` i `prisma/schema.prisma` til `postgresql`/`mysql` i produksjon)
+- **Prisma** + PostgreSQL (samme database lokalt og i produksjon — kjør lokalt via `docker compose`)
 - **NextAuth** (credentials-provider) for autentisering
 - Plattform-integrasjoner i `src/lib/platforms/`:
   - `twitter.ts` — OAuth 2.0 (PKCE) + `twitter-api-v2` for tweet + media-opplasting
@@ -27,12 +27,20 @@ og **TikTok** samtidig, fra samme sted.
 
 ## Kom i gang lokalt
 
+Krever [Docker](https://www.docker.com/) for en lokal Postgres-database (samme database som i
+produksjon — ingen SQLite/Postgres-forskjeller å bekymre seg for).
+
 ```bash
 npm install
-cp .env.example .env   # fyll inn NEXTAUTH_SECRET, CRON_SECRET og evt. API-nøkler
-npx prisma migrate dev
+cp .env.example .env    # fyll inn NEXTAUTH_SECRET, CRON_SECRET og evt. API-nøkler
+docker compose up -d    # starter en lokal Postgres på localhost:5432
+npx prisma migrate deploy
 npm run dev
 ```
+
+Har du ikke Docker installert, kan du i stedet peke `DATABASE_URL` i `.env` mot en hvilken som
+helst annen Postgres-database (f.eks. en gratis Neon/Supabase-database) og kjøre samme
+`npx prisma migrate deploy` mot den.
 
 Appen kjører på http://localhost:3000. For at planlagte innlegg skal publiseres automatisk
 lokalt, kjør i et eget terminalvindu:
